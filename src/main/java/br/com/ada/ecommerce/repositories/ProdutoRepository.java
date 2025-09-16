@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ProdutoRepository {
-    private static final String CSV_FILE = "produtos.csv";
+    private static final String CSV_FILE = "data/produtos.csv";
     private static Long nextId = 1L;
 
     public ProdutoRepository() {
@@ -51,8 +51,8 @@ public class ProdutoRepository {
             
             String[] data = {
                 produto.getId().toString(),
-                CsvUtils.escapeCsv(produto.getNome()),
-                CsvUtils.escapeCsv(produto.getDescricao()),
+                produto.getNome(),
+                produto.getDescricao(),
                 produto.getValorPadrao().toString(),
                 CsvUtils.formatDateTime(produto.getDataCadastro())
             };
@@ -113,8 +113,8 @@ public class ProdutoRepository {
             for (Produto produto : produtos) {
                 String[] row = {
                     produto.getId().toString(),
-                    CsvUtils.escapeCsv(produto.getNome()),
-                    CsvUtils.escapeCsv(produto.getDescricao()),
+                    produto.getNome(),
+                    produto.getDescricao(),
                     produto.getValorPadrao().toString(),
                     CsvUtils.formatDateTime(produto.getDataCadastro())
                 };

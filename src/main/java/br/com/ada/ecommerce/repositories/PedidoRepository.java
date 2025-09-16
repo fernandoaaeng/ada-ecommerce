@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class PedidoRepository {
-    private static final String CSV_FILE = "pedidos.csv";
+    private static final String CSV_FILE = "data/pedidos.csv";
     private static Long nextId = 1L;
 
     public PedidoRepository() {

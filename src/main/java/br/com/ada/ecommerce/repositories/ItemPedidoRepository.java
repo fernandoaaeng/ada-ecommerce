@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ItemPedidoRepository {
-    private static final String CSV_FILE = "itens_pedido.csv";
+    private static final String CSV_FILE = "data/itens_pedido.csv";
     private static Long nextId = 1L;
 
     public ItemPedidoRepository() {
@@ -52,7 +52,7 @@ public class ItemPedidoRepository {
                 itemPedido.getId().toString(),
                 itemPedido.getPedidoId().toString(),
                 itemPedido.getProdutoId().toString(),
-                CsvUtils.escapeCsv(itemPedido.getNomeProduto()),
+                itemPedido.getNomeProduto(),
                 itemPedido.getQuantidade().toString(),
                 itemPedido.getPrecoVenda().toString()
             };
@@ -131,7 +131,7 @@ public class ItemPedidoRepository {
                     item.getId().toString(),
                     item.getPedidoId().toString(),
                     item.getProdutoId().toString(),
-                    CsvUtils.escapeCsv(item.getNomeProduto()),
+                    item.getNomeProduto(),
                     item.getQuantidade().toString(),
                     item.getPrecoVenda().toString()
                 };

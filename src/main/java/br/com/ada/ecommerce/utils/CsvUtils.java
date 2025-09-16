@@ -1,5 +1,9 @@
 package br.com.ada.ecommerce.utils;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvException;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -18,91 +22,58 @@ public class CsvUtils {
             return records;
         }
 
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] values = parseCsvLine(line);
-                records.add(values);
-            }
+        try (FileReader fileReader = new FileReader(fileName);
+             CSVReader csvReader = new CSVReader(fileReader)) {
+            records = csvReader.readAll();
+        } catch (CsvException e) {
+            throw new IOException("Erro ao ler arquivo CSV: " + e.getMessage(), e);
         }
         
         return records;
     }
 
-    private static String[] parseCsvLine(String line) {
-        List<String> fields = new ArrayList<>();
-        StringBuilder currentField = new StringBuilder();
-        boolean inQuotes = false;
-        
-        for (int i = 0; i < line.length(); i++) {
-            char c = line.charAt(i);
-            
-            if (c == '"') {
-                inQuotes = !inQuotes;
-            } else if (c == ',' && !inQuotes) {
-                fields.add(currentField.toString().trim());
-                currentField = new StringBuilder();
-            } else {
-                currentField.append(c);
-            }
-        }
-        
-        // Adicionar o último campo
-        fields.add(currentField.toString().trim());
-        
-        return fields.toArray(new String[0]);
-    }
-
     public static void writeCsv(String fileName, List<String[]> data) throws IOException {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
-            for (String[] row : data) {
-                StringBuilder line = new StringBuilder();
-                for (int i = 0; i < row.length; i++) {
-                    if (i > 0) {
-                        line.append(",");
-                    }
-                    line.append(row[i]);
-                }
-                pw.println(line.toString());
-            }
+        try (FileWriter fileWriter = new FileWriter(fileName);
+             CSVWriter csvWriter = new CSVWriter(fileWriter)) {
+            csvWriter.writeAll(data);
         }
     }
 
     public static void appendToCsv(String fileName, String[] data) throws IOException {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(fileName, true))) {
-            StringBuilder line = new StringBuilder();
-            for (int i = 0; i < data.length; i++) {
-                if (i > 0) {
-                    line.append(",");
-                }
-                line.append(data[i]);
-            }
-            pw.println(line.toString());
+        try (FileWriter fileWriter = new FileWriter(fileName, true);
+             CSVWriter csvWriter = new CSVWriter(fileWriter)) {
+            csvWriter.writeNext(data);
         }
+    }
+
+    public static String escapeCsvData(String data) {
+        if (data == null) {
+            return "";
+        }
+        
+        // Se contém vírgula, aspas duplas ou quebra de linha, precisa ser escapado
+        if (data.contains(",") || data.contains("\"") || data.contains("\n") || data.contains("\r")) {
+            // Escapa aspas duplas duplicando-as
+            data = data.replace("\"", "\"\"");
+            // Envolve em aspas duplas
+            return "\"" + data + "\"";
+        }
+        
+        return data;
     }
 
     public static String formatDateTime(LocalDateTime dateTime) {
         return dateTime != null ? dateTime.format(DATE_TIME_FORMATTER) : "";
     }
 
-    public static LocalDateTime parseDateTime(String dateTimeString) {
-        if (dateTimeString == null || dateTimeString.isEmpty()) {
+    public static LocalDateTime parseDateTime(String dateTimeStr) {
+        if (dateTimeStr == null || dateTimeStr.trim().isEmpty()) {
             return null;
         }
         try {
-            return LocalDateTime.parse(dateTimeString, DATE_TIME_FORMATTER);
+            return LocalDateTime.parse(dateTimeStr.trim(), DATE_TIME_FORMATTER);
         } catch (Exception e) {
             return null;
         }
-    }
-
-    public static String escapeCsv(String value) {
-        if (value == null) {
-            return "";
-        }
-        if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
-            return "\"" + value.replace("\"", "\"\"") + "\"";
-        }
-        return value;
     }
 }

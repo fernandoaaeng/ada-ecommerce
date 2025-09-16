@@ -1,135 +1,171 @@
-# Ada Tech E-Commerce
+# Ada E-Commerce
 
-Sistema de E-Commerce desenvolvido em Java 21 para gerenciamento de clientes, produtos e pedidos via linha de comando (CLI).
+Sistema de E-Commerce CLI desenvolvido para Ada Tech, permitindo gerenciar clientes, produtos e pedidos através de interface de linha de comando.
 
-## Funcionalidades
+## Instalação e Execução
 
-### Gestao de Clientes
-- Cadastrar novos clientes (nome, documento obrigatorio, email, telefone)
-- Listar clientes cadastrados
-- Buscar cliente por ID ou documento
-- Atualizar dados de clientes
-- Exclusao nao permitida (mantem historico)
+### 1. Compile o projeto
+```bash
+mvn clean compile
+```
 
-### Gestao de Produtos
-- Cadastrar novos produtos (nome, descricao, valor padrao)
-- Listar produtos cadastrados
-- Buscar produto por ID
-- Atualizar dados dos produtos
-- Exclusao nao permitida (mantem historico)
+### 2. Execute a aplicação
+```bash
+mvn exec:java
+```
 
-### Gestao de Pedidos
-- Criar pedido para um cliente
-- Adicionar/remover itens ao pedido
-- Alterar quantidade de itens
-- Finalizar pedido (status: "Aguardando pagamento")
-- Realizar pagamento (status: "Pago")
-- Realizar entrega (status: "Finalizado")
-- Notificacoes automaticas ao cliente
+### 3. (Opcional) Crie um JAR executável
+```bash
+mvn clean package
+java -jar target/ada-ecommerce-1.0.0.jar
+```
 
-## Como Executar
+### Scripts .bat (Recomendado para Windows)
+```bash
+# Compilar e executar
+run.bat
 
-### Pre-requisitos
-- Java 21 ou superior instalado
-- Command Prompt ou PowerShell
-
-### Execucao Rapida (Recomendado)
-**Duplo clique no arquivo `start.bat`** ou execute no Command Prompt:
-```cmd
+# Apenas executar (se já compilado)
 start.bat
 ```
 
-### Execucao Manual no Windows
+## Funcionalidades
 
-1. **Abra o Command Prompt ou PowerShell** no diretorio do projeto
+### Gestão de Clientes
+- Cadastrar novos clientes
+- Listar todos os clientes
+- Buscar cliente por ID ou documento
+- Atualizar dados do cliente
 
-2. **Compilar o projeto:**
-   ```cmd
-   mkdir build
-   javac -d build -cp src/main/java src/main/java/br/com/ada/ecommerce/Main.java src/main/java/br/com/ada/ecommerce/models/*.java src/main/java/br/com/ada/ecommerce/utils/*.java src/main/java/br/com/ada/ecommerce/repositories/*.java src/main/java/br/com/ada/ecommerce/services/*.java src/main/java/br/com/ada/ecommerce/cli/*.java
-   ```
+### Gestão de Produtos
+- Cadastrar novos produtos
+- Listar todos os produtos
+- Buscar produto por ID
+- Atualizar informações do produto
 
-3. **Executar o sistema:**
-   ```cmd
-   java -cp build br.com.ada.ecommerce.Main
-   ```
+### Gestão de Pedidos
+- Criar novos pedidos
+- Adicionar/remover produtos do pedido
+- Alterar quantidades
+- Finalizar pedidos
+- Processar pagamentos
+- Processar entregas
+- Listar pedidos por cliente ou status
 
-### Alternativa: Execucao com PowerShell
-Se preferir usar PowerShell:
-```powershell
-# Compilar
-New-Item -ItemType Directory -Path "build" -Force
-javac -d build -cp src/main/java src/main/java/br/com/ada/ecommerce/Main.java src/main/java/br/com/ada/ecommerce/models/*.java src/main/java/br/com/ada/ecommerce/utils/*.java src/main/java/br/com/ada/ecommerce/repositories/*.java src/main/java/br/com/ada/ecommerce/services/*.java src/main/java/br/com/ada/ecommerce/cli/*.java
-
-# Executar
-java -cp build br.com.ada.ecommerce.Main
-```
+### Notificações
+- Simulação de notificações via console para:
+  - Finalização de pedidos
+  - Confirmação de pagamento
+  - Confirmação de entrega
 
 ## Estrutura do Projeto
 
 ```
-src/main/java/br/com/ada/ecommerce/
-├── Main.java                          # Classe principal
-├── models/                            # Modelos de dados
-│   ├── Cliente.java
-│   ├── Produto.java
-│   ├── Pedido.java
-│   ├── ItemPedido.java
-│   └── StatusPedido.java
-├── repositories/                      # Persistencia em CSV
-│   ├── ClienteRepository.java
-│   ├── ProdutoRepository.java
-│   ├── PedidoRepository.java
-│   └── ItemPedidoRepository.java
-├── services/                          # Logica de negocio
-│   ├── ClienteService.java
-│   ├── ProdutoService.java
-│   ├── PedidoService.java
-│   └── NotificationService.java
-├── cli/                              # Interface de linha de comando
-│   ├── ConsoleUtils.java
-│   ├── ClienteCLI.java
-│   ├── ProdutoCLI.java
-│   └── PedidoCLI.java
-└── utils/                            # Utilitarios
-    └── CsvUtils.java
+ada-ecommerce/
+├── src/main/java/br/com/ada/ecommerce/
+│   ├── Main.java                    # Classe principal
+│   ├── models/                      # Modelos de dados
+│   │   ├── Cliente.java
+│   │   ├── Produto.java
+│   │   ├── Pedido.java
+│   │   ├── ItemPedido.java
+│   │   └── StatusPedido.java
+│   ├── repositories/                # Camada de persistência
+│   │   ├── ClienteRepository.java
+│   │   ├── ProdutoRepository.java
+│   │   ├── PedidoRepository.java
+│   │   └── ItemPedidoRepository.java
+│   ├── services/                    # Lógica de negócio
+│   │   ├── ClienteService.java
+│   │   ├── ProdutoService.java
+│   │   ├── PedidoService.java
+│   │   └── NotificationService.java
+│   ├── utils/                       # Utilitários
+│   │   └── CsvUtils.java
+│   └── cli/                         # Interface de linha de comando
+│       ├── ConsoleUtils.java
+│       ├── ClienteCLI.java
+│       ├── ProdutoCLI.java
+│       └── PedidoCLI.java
+├── data/                            # Diretório de dados
+│   ├── clientes.csv                 # Dados dos clientes
+│   ├── produtos.csv                 # Catálogo de produtos
+│   ├── pedidos.csv                  # Informações dos pedidos
+│   └── itens_pedido.csv             # Itens de cada pedido
+├── run.bat                          # Script para compilar e executar
+├── start.bat                        # Script para apenas executar
+├── pom.xml                          # Configuração do Maven
+└── README.md
 ```
 
-## Persistencia de Dados
+## Arquivos de Dados
 
-O sistema utiliza arquivos CSV para persistir os dados:
+O sistema utiliza os seguintes arquivos CSV para persistência no diretório `data/`:
 
-- **`clientes.csv`** - Dados dos clientes
-- **`produtos.csv`** - Dados dos produtos
-- **`pedidos.csv`** - Dados dos pedidos
-- **`itens_pedido.csv`** - Itens de cada pedido
+- **data/clientes.csv**: Dados dos clientes
+- **data/produtos.csv**: Catálogo de produtos
+- **data/pedidos.csv**: Informações dos pedidos
+- **data/itens_pedido.csv**: Itens de cada pedido
 
-Os arquivos sao criados automaticamente na primeira execucao do sistema.
+## Comandos Úteis
 
-## Sistema de Notificacoes
+### Scripts .bat (Recomendado para Windows)
+```bash
+# Compilar e executar
+run.bat
 
-O sistema simula notificacoes ao cliente atraves de mensagens no console:
+# Apenas executar (se já compilado)
+start.bat
+```
 
-- **Pedido Finalizado** - Quando o pedido muda para "Aguardando pagamento"
-- **Pagamento Confirmado** - Quando o pagamento e realizado
-- **Entrega Realizada** - Quando o pedido e entregue
+### Comandos Maven Diretos
+```bash
+# Compilar o projeto
+mvn compile
 
-## Como Usar
+# Executar a aplicação
+mvn exec:java
 
-1. **Execute o sistema** usando um dos comandos acima
-2. **Navegue pelos menus** usando os numeros das opcoes
-3. **Use a opcao 0** para voltar ou sair
-4. **Siga as instrucoes** na tela para cada operacao
+# Executar testes (quando implementados)
+mvn test
 
-### Exemplo de Fluxo:
-1. Cadastre um cliente
-2. Cadastre alguns produtos
-3. Crie um pedido para o cliente
-4. Adicione itens ao pedido
-5. Finalize o pedido
-6. Realize o pagamento
-7. Realize a entrega
-8. Observe as notificacoes ao cliente
+# Criar JAR executável
+mvn package
 
+# Limpar arquivos compilados
+mvn clean
 
+# Instalar no repositório local
+mvn install
+```
 
+## Tecnologias Utilizadas
+
+- **Java 17**: Linguagem de programação
+- **Maven**: Gerenciamento de dependências e build
+- **OpenCSV 5.9**: Manipulação de arquivos CSV
+- **Console Input/Output**: Interface de linha de comando
+
+## Funcionalidades do Sistema
+
+### Status de Pedidos
+- **ABERTO**: Pedido criado, pode receber itens
+- **AGUARDANDO_PAGAMENTO**: Pedido finalizado, aguardando pagamento
+- **PAGO**: Pagamento confirmado, aguardando entrega
+- **FINALIZADO**: Pedido entregue ao cliente
+
+### Fluxo de Trabalho
+1. Cadastrar clientes e produtos
+2. Criar pedidos para clientes
+3. Adicionar produtos aos pedidos
+4. Finalizar pedidos
+5. Processar pagamentos
+6. Processar entregas
+
+## Desenvolvido para Ada Tech
+
+Este projeto foi desenvolvido como parte do programa de formação da Ada Tech, demonstrando boas práticas de programação orientada a objetos, estruturação de projetos Java e desenvolvimento de sistemas CLI.
+
+## Licença
+
+Este projeto é desenvolvido para fins educacionais como parte do programa Ada Tech.

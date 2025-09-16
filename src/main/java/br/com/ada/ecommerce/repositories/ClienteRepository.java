@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ClienteRepository {
-    private static final String CSV_FILE = "clientes.csv";
+    private static final String CSV_FILE = "data/clientes.csv";
     private static Long nextId = 1L;
 
     public ClienteRepository() {
@@ -49,10 +49,10 @@ public class ClienteRepository {
             
             String[] data = {
                 cliente.getId().toString(),
-                CsvUtils.escapeCsv(cliente.getNome()),
-                CsvUtils.escapeCsv(cliente.getDocumento()),
-                CsvUtils.escapeCsv(cliente.getEmail()),
-                CsvUtils.escapeCsv(cliente.getTelefone()),
+                cliente.getNome(),
+                cliente.getDocumento(),
+                cliente.getEmail(),
+                cliente.getTelefone(),
                 CsvUtils.formatDateTime(cliente.getDataCadastro())
             };
             
@@ -119,10 +119,10 @@ public class ClienteRepository {
             for (Cliente cliente : clientes) {
                 String[] row = {
                     cliente.getId().toString(),
-                    CsvUtils.escapeCsv(cliente.getNome()),
-                    CsvUtils.escapeCsv(cliente.getDocumento()),
-                    CsvUtils.escapeCsv(cliente.getEmail()),
-                    CsvUtils.escapeCsv(cliente.getTelefone()),
+                    cliente.getNome(),
+                    cliente.getDocumento(),
+                    cliente.getEmail(),
+                    cliente.getTelefone(),
                     CsvUtils.formatDateTime(cliente.getDataCadastro())
                 };
                 data.add(row);

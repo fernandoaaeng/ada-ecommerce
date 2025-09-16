@@ -59,12 +59,18 @@ docs/generated/
 coverage/
 *.lcov
 
-# Arquivos de configuração do Maven (se usado no futuro)
+# Arquivos de configuração do Maven
 .mvn/
 mvnw
 mvnw.cmd
+target/
+dependency-reduced-pom.xml
+
+# Arquivos de dados (manter apenas estrutura, não os dados)
+data/*.csv
+!data/.gitkeep
 
 # Arquivos de configuração do Gradle (se usado no futuro)
 .gradle/
-gradlew
+gradlewa
 gradlew.bat
