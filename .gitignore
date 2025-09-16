@@ -1,0 +1,70 @@
+# Arquivos de IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+
+# Arquivos compilados
+*.class
+build/
+target/
+out/
+dist/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Arquivos de configuração local
+application-local.properties
+application-dev.properties
+
+# Arquivos de dependências
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+
+# Arquivos de teste
+test-output/
+test-results/
+
+# Arquivos de documentação gerados
+javadoc/
+docs/generated/
+
+# Arquivos de profiling
+*.hprof
+*.prof
+
+# Arquivos de coverage
+coverage/
+*.lcov
+
+# Arquivos de configuração do Maven (se usado no futuro)
+.mvn/
+mvnw
+mvnw.cmd
+
+# Arquivos de configuração do Gradle (se usado no futuro)
+.gradle/
+gradlew
+gradlew.bat
