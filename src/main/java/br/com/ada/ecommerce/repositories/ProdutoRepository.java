@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ProdutoRepository {
-    private static final String CSV_FILE = "produtos.csv";
+    private static final String CSV_FILE = "data/produtos.csv";
     private static Long nextId = 1L;
 
     public ProdutoRepository() {
@@ -91,6 +91,19 @@ public class ProdutoRepository {
         return findAll().stream()
                 .filter(produto -> produto.getId().equals(id))
                 .findFirst();
+    }
+
+    public List<Produto> findByNome(String nome) {
+        return findAll().stream()
+                .filter(produto -> produto.getNome().toLowerCase().contains(nome.toLowerCase()))
+                .toList();
+    }
+
+    public List<Produto> findByDescricao(String descricao) {
+        return findAll().stream()
+                .filter(produto -> produto.getDescricao() != null && 
+                                 produto.getDescricao().toLowerCase().contains(descricao.toLowerCase()))
+                .toList();
     }
 
     public Produto update(Produto produto) {

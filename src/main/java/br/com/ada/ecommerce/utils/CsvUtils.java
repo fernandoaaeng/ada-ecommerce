@@ -1,6 +1,10 @@
 package br.com.ada.ecommerce.utils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -75,7 +79,7 @@ public class CsvUtils {
                 if (i > 0) {
                     line.append(",");
                 }
-                line.append(data[i]);
+                line.append(escapeCsv(data[i]));
             }
             pw.println(line.toString());
         }

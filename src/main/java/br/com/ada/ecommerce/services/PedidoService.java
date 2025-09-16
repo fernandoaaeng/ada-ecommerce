@@ -45,6 +45,22 @@ public class PedidoService {
         return pedidoRepository.findByClienteId(clienteId);
     }
 
+    public List<Pedido> buscarPedidosPorStatus(StatusPedido status) {
+        return pedidoRepository.findByStatus(status);
+    }
+
+    public List<Pedido> buscarPedidosPorValorTotalMaiorQue(BigDecimal valor) {
+        return pedidoRepository.findByValorTotalMaiorQue(valor);
+    }
+
+    public List<Pedido> buscarPedidosPorValorTotalMenorQue(BigDecimal valor) {
+        return pedidoRepository.findByValorTotalMenorQue(valor);
+    }
+
+    public List<Pedido> buscarPedidosPorValorTotalEntre(BigDecimal valorMinimo, BigDecimal valorMaximo) {
+        return pedidoRepository.findByValorTotalEntre(valorMinimo, valorMaximo);
+    }
+
     public ItemPedido adicionarItemAoPedido(Long pedidoId, Long produtoId, Integer quantidade, BigDecimal precoVenda) {
         Optional<Pedido> pedidoOpt = pedidoRepository.findById(pedidoId);
         if (pedidoOpt.isEmpty()) {

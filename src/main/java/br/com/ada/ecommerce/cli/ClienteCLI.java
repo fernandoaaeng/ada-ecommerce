@@ -20,8 +20,7 @@ public class ClienteCLI {
             String[] opcoes = {
                 "Cadastrar Cliente",
                 "Listar Clientes",
-                "Buscar Cliente por ID",
-                "Buscar Cliente por Documento",
+                "Buscar Clientes",
                 "Atualizar Cliente"
             };
 
@@ -31,9 +30,8 @@ public class ClienteCLI {
             switch (opcao) {
                 case 1 -> cadastrarCliente();
                 case 2 -> listarClientes();
-                case 3 -> buscarClientePorId();
-                case 4 -> buscarClientePorDocumento();
-                case 5 -> atualizarCliente();
+                case 3 -> menuBuscaClientes();
+                case 4 -> atualizarCliente();
                 case 0 -> { return; }
             }
         }
@@ -88,6 +86,35 @@ public class ClienteCLI {
         ConsoleUtils.pausar("\nPressione Enter para continuar...");
     }
 
+    private void menuBuscaClientes() {
+        while (true) {
+            ConsoleUtils.limparConsole();
+            ConsoleUtils.exibirCabecalho("Buscar Clientes");
+
+            String[] opcoes = {
+                "Buscar por ID",
+                "Buscar por Documento (exato)",
+                "Buscar por Email",
+                "Buscar por Nome",
+                "Buscar por Telefone",
+                "Buscar por Documento (parcial)"
+            };
+
+            ConsoleUtils.exibirMenu(opcoes);
+            int opcao = ConsoleUtils.lerOpcao(opcoes.length);
+
+            switch (opcao) {
+                case 1 -> buscarClientePorId();
+                case 2 -> buscarClientePorDocumento();
+                case 3 -> buscarClientePorEmail();
+                case 4 -> buscarClientesPorNome();
+                case 5 -> buscarClientesPorTelefone();
+                case 6 -> buscarClientesPorDocumentoContendo();
+                case 0 -> { return; }
+            }
+        }
+    }
+
     private void buscarClientePorId() {
         ConsoleUtils.limparConsole();
         ConsoleUtils.exibirCabecalho("Buscar Cliente por ID");
@@ -139,6 +166,127 @@ public class ClienteCLI {
             System.out.println("Data Cadastro: " + cliente.get().getDataCadastro());
         } else {
             System.out.println("\nERRO: Cliente nao encontrado.");
+        }
+
+        ConsoleUtils.pausar("\nPressione Enter para continuar...");
+    }
+
+    private void buscarClientePorEmail() {
+        ConsoleUtils.limparConsole();
+        ConsoleUtils.exibirCabecalho("Buscar Cliente por Email");
+
+        String email = ConsoleUtils.lerString("Digite o email do cliente: ");
+        if (email.isEmpty()) {
+            System.out.println("ERRO: Email e obrigatorio.");
+            ConsoleUtils.pausar("\nPressione Enter para continuar...");
+            return;
+        }
+
+        Optional<Cliente> cliente = clienteService.buscarClientePorEmail(email);
+
+        if (cliente.isPresent()) {
+            System.out.println("\nSUCESSO: Cliente encontrado:");
+            System.out.println("ID: " + cliente.get().getId());
+            System.out.println("Nome: " + cliente.get().getNome());
+            System.out.println("Documento: " + cliente.get().getDocumento());
+            System.out.println("Email: " + cliente.get().getEmail());
+            System.out.println("Telefone: " + (cliente.get().getTelefone() != null ? cliente.get().getTelefone() : "Nao informado"));
+            System.out.println("Data Cadastro: " + cliente.get().getDataCadastro());
+        } else {
+            System.out.println("\nERRO: Cliente nao encontrado.");
+        }
+
+        ConsoleUtils.pausar("\nPressione Enter para continuar...");
+    }
+
+    private void buscarClientesPorNome() {
+        ConsoleUtils.limparConsole();
+        ConsoleUtils.exibirCabecalho("Buscar Clientes por Nome");
+
+        String nome = ConsoleUtils.lerString("Digite o nome (ou parte do nome) do cliente: ");
+        if (nome.isEmpty()) {
+            System.out.println("ERRO: Nome e obrigatorio.");
+            ConsoleUtils.pausar("\nPressione Enter para continuar...");
+            return;
+        }
+
+        List<Cliente> clientes = clienteService.buscarClientesPorNome(nome);
+
+        if (clientes.isEmpty()) {
+            System.out.println("Nenhum cliente encontrado com o nome: " + nome);
+        } else {
+            System.out.println("Clientes encontrados (" + clientes.size() + "):\n");
+            for (Cliente cliente : clientes) {
+                System.out.println("ID: " + cliente.getId());
+                System.out.println("Nome: " + cliente.getNome());
+                System.out.println("Documento: " + cliente.getDocumento());
+                System.out.println("Email: " + cliente.getEmail());
+                System.out.println("Telefone: " + (cliente.getTelefone() != null ? cliente.getTelefone() : "Nao informado"));
+                System.out.println("Data Cadastro: " + cliente.getDataCadastro());
+                System.out.println("-".repeat(40));
+            }
+        }
+
+        ConsoleUtils.pausar("\nPressione Enter para continuar...");
+    }
+
+    private void buscarClientesPorTelefone() {
+        ConsoleUtils.limparConsole();
+        ConsoleUtils.exibirCabecalho("Buscar Clientes por Telefone");
+
+        String telefone = ConsoleUtils.lerString("Digite o telefone (ou parte do telefone) do cliente: ");
+        if (telefone.isEmpty()) {
+            System.out.println("ERRO: Telefone e obrigatorio.");
+            ConsoleUtils.pausar("\nPressione Enter para continuar...");
+            return;
+        }
+
+        List<Cliente> clientes = clienteService.buscarClientesPorTelefone(telefone);
+
+        if (clientes.isEmpty()) {
+            System.out.println("Nenhum cliente encontrado com o telefone: " + telefone);
+        } else {
+            System.out.println("Clientes encontrados (" + clientes.size() + "):\n");
+            for (Cliente cliente : clientes) {
+                System.out.println("ID: " + cliente.getId());
+                System.out.println("Nome: " + cliente.getNome());
+                System.out.println("Documento: " + cliente.getDocumento());
+                System.out.println("Email: " + cliente.getEmail());
+                System.out.println("Telefone: " + (cliente.getTelefone() != null ? cliente.getTelefone() : "Nao informado"));
+                System.out.println("Data Cadastro: " + cliente.getDataCadastro());
+                System.out.println("-".repeat(40));
+            }
+        }
+
+        ConsoleUtils.pausar("\nPressione Enter para continuar...");
+    }
+
+    private void buscarClientesPorDocumentoContendo() {
+        ConsoleUtils.limparConsole();
+        ConsoleUtils.exibirCabecalho("Buscar Clientes por Documento (Parcial)");
+
+        String documento = ConsoleUtils.lerString("Digite parte do documento (CPF/CNPJ): ");
+        if (documento.isEmpty()) {
+            System.out.println("ERRO: Documento e obrigatorio.");
+            ConsoleUtils.pausar("\nPressione Enter para continuar...");
+            return;
+        }
+
+        List<Cliente> clientes = clienteService.buscarClientesPorDocumentoContendo(documento);
+
+        if (clientes.isEmpty()) {
+            System.out.println("Nenhum cliente encontrado com documento contendo: " + documento);
+        } else {
+            System.out.println("Clientes encontrados (" + clientes.size() + "):\n");
+            for (Cliente cliente : clientes) {
+                System.out.println("ID: " + cliente.getId());
+                System.out.println("Nome: " + cliente.getNome());
+                System.out.println("Documento: " + cliente.getDocumento());
+                System.out.println("Email: " + cliente.getEmail());
+                System.out.println("Telefone: " + (cliente.getTelefone() != null ? cliente.getTelefone() : "Nao informado"));
+                System.out.println("Data Cadastro: " + cliente.getDataCadastro());
+                System.out.println("-".repeat(40));
+            }
         }
 
         ConsoleUtils.pausar("\nPressione Enter para continuar...");

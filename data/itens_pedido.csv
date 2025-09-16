@@ -1,0 +1,22 @@
+id,pedidoId,produtoId,nomeProduto,quantidade,precoVenda
+1,1,1,Camiseta,2,25.90
+2,1,2,Calca Jeans,1,89.90
+3,1,15,Chinelo,2,19.90
+4,3,3,Tenis Esportivo,1,129.90
+5,3,4,Moletom,1,79.90
+6,4,5,Bermuda,2,45.90
+7,4,6,Jaqueta,1,199.90
+8,4,7,Blusa Feminina,1,65.90
+9,5,8,Sapato Social,1,159.90
+10,5,9,Vestido,1,125.90
+11,5,10,Shorts,1,35.90
+12,7,11,Camisa Polo,2,55.90
+13,7,12,Saia,1,49.90
+14,7,13,Bota,1,179.90
+15,7,14,Sueter,1,85.90
+16,8,15,Chinelo,3,19.90
+17,8,16,Blazer,1,149.90
+18,8,17,Tenis Casual,1,95.90
+19,9,18,Legging,2,39.90
+20,9,19,Camisa Social,1,75.90
+21,9,20,Casaco,1,119.9022,11,14,Sueter,3,85.90

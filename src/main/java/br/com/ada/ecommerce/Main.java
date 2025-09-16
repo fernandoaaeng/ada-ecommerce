@@ -4,6 +4,8 @@ import br.com.ada.ecommerce.cli.ConsoleUtils;
 import br.com.ada.ecommerce.cli.ClienteCLI;
 import br.com.ada.ecommerce.cli.ProdutoCLI;
 import br.com.ada.ecommerce.cli.PedidoCLI;
+import br.com.ada.ecommerce.cli.VendaCLI;
+import br.com.ada.ecommerce.services.PedidoService;
 
 public class Main {
     public static void main(String[] args) {
@@ -18,9 +20,13 @@ public class Main {
     }
 
     private static void executarSistema() {
+        // Criar instâncias únicas dos services
+        PedidoService pedidoService = new PedidoService();
+        
         ClienteCLI clienteCLI = new ClienteCLI();
         ProdutoCLI produtoCLI = new ProdutoCLI();
-        PedidoCLI pedidoCLI = new PedidoCLI();
+        PedidoCLI pedidoCLI = new PedidoCLI(pedidoService);
+        VendaCLI vendaCLI = new VendaCLI(pedidoService);
 
         while (true) {
             ConsoleUtils.limparConsole();
@@ -31,6 +37,7 @@ public class Main {
             System.out.println("Todos os dados sao persistidos em arquivos CSV.");
 
             String[] opcoes = {
+                "Realizar Venda (Fluxo Simplificado)",
                 "Gestao de Clientes",
                 "Gestao de Produtos", 
                 "Gestao de Pedidos"
@@ -40,9 +47,10 @@ public class Main {
             int opcao = ConsoleUtils.lerOpcao(opcoes.length);
 
             switch (opcao) {
-                case 1 -> clienteCLI.executar();
-                case 2 -> produtoCLI.executar();
-                case 3 -> pedidoCLI.executar();
+                case 1 -> vendaCLI.executar();
+                case 2 -> clienteCLI.executar();
+                case 3 -> produtoCLI.executar();
+                case 4 -> pedidoCLI.executar();
                 case 0 -> {
                     ConsoleUtils.limparConsole();
                     System.out.println("=".repeat(60));

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ClienteRepository {
-    private static final String CSV_FILE = "clientes.csv";
+    private static final String CSV_FILE = "data/clientes.csv";
     private static Long nextId = 1L;
 
     public ClienteRepository() {
@@ -97,6 +97,31 @@ public class ClienteRepository {
         return findAll().stream()
                 .filter(cliente -> cliente.getDocumento().equals(documento))
                 .findFirst();
+    }
+
+    public Optional<Cliente> findByEmail(String email) {
+        return findAll().stream()
+                .filter(cliente -> cliente.getEmail().toLowerCase().equals(email.toLowerCase()))
+                .findFirst();
+    }
+
+    public List<Cliente> findByNome(String nome) {
+        return findAll().stream()
+                .filter(cliente -> cliente.getNome().toLowerCase().contains(nome.toLowerCase()))
+                .toList();
+    }
+
+    public List<Cliente> findByTelefone(String telefone) {
+        return findAll().stream()
+                .filter(cliente -> cliente.getTelefone() != null && 
+                                 cliente.getTelefone().contains(telefone))
+                .toList();
+    }
+
+    public List<Cliente> findByDocumentoContendo(String documento) {
+        return findAll().stream()
+                .filter(cliente -> cliente.getDocumento().contains(documento))
+                .toList();
     }
 
     public Cliente update(Cliente cliente) {

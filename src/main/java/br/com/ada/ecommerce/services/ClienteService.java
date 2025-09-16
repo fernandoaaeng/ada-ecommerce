@@ -43,6 +43,34 @@ public class ClienteService {
         return clienteRepository.findByDocumento(documento);
     }
 
+    public Optional<Cliente> buscarClientePorEmail(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return Optional.empty();
+        }
+        return clienteRepository.findByEmail(email.trim());
+    }
+
+    public List<Cliente> buscarClientesPorNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            return List.of();
+        }
+        return clienteRepository.findByNome(nome.trim());
+    }
+
+    public List<Cliente> buscarClientesPorTelefone(String telefone) {
+        if (telefone == null || telefone.trim().isEmpty()) {
+            return List.of();
+        }
+        return clienteRepository.findByTelefone(telefone.trim());
+    }
+
+    public List<Cliente> buscarClientesPorDocumentoContendo(String documento) {
+        if (documento == null || documento.trim().isEmpty()) {
+            return List.of();
+        }
+        return clienteRepository.findByDocumentoContendo(documento.trim());
+    }
+
     public Cliente atualizarCliente(Cliente cliente) {
         if (cliente.getId() == null) {
             throw new IllegalArgumentException("ID do cliente e obrigatorio para atualizacao.");

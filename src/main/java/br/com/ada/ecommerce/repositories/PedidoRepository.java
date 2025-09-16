@@ -1,18 +1,17 @@
 package br.com.ada.ecommerce.repositories;
 
-import br.com.ada.ecommerce.models.Pedido;
-import br.com.ada.ecommerce.models.StatusPedido;
-import br.com.ada.ecommerce.utils.CsvUtils;
-
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import br.com.ada.ecommerce.models.Pedido;
+import br.com.ada.ecommerce.models.StatusPedido;
+import br.com.ada.ecommerce.utils.CsvUtils;
+
 public class PedidoRepository {
-    private static final String CSV_FILE = "pedidos.csv";
+    private static final String CSV_FILE = "data/pedidos.csv";
     private static Long nextId = 1L;
 
     public PedidoRepository() {
@@ -104,6 +103,31 @@ public class PedidoRepository {
     public List<Pedido> findByClienteId(Long clienteId) {
         return findAll().stream()
                 .filter(pedido -> pedido.getClienteId().equals(clienteId))
+                .toList();
+    }
+
+    public List<Pedido> findByStatus(StatusPedido status) {
+        return findAll().stream()
+                .filter(pedido -> pedido.getStatus().equals(status))
+                .toList();
+    }
+
+    public List<Pedido> findByValorTotalMaiorQue(java.math.BigDecimal valor) {
+        return findAll().stream()
+                .filter(pedido -> pedido.getValorTotal().compareTo(valor) > 0)
+                .toList();
+    }
+
+    public List<Pedido> findByValorTotalMenorQue(java.math.BigDecimal valor) {
+        return findAll().stream()
+                .filter(pedido -> pedido.getValorTotal().compareTo(valor) < 0)
+                .toList();
+    }
+
+    public List<Pedido> findByValorTotalEntre(java.math.BigDecimal valorMinimo, java.math.BigDecimal valorMaximo) {
+        return findAll().stream()
+                .filter(pedido -> pedido.getValorTotal().compareTo(valorMinimo) >= 0 && 
+                                 pedido.getValorTotal().compareTo(valorMaximo) <= 0)
                 .toList();
     }
 

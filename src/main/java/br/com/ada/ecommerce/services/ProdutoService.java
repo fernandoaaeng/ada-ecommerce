@@ -33,6 +33,20 @@ public class ProdutoService {
         return produtoRepository.findById(id);
     }
 
+    public List<Produto> buscarProdutosPorNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            return List.of();
+        }
+        return produtoRepository.findByNome(nome.trim());
+    }
+
+    public List<Produto> buscarProdutosPorDescricao(String descricao) {
+        if (descricao == null || descricao.trim().isEmpty()) {
+            return List.of();
+        }
+        return produtoRepository.findByDescricao(descricao.trim());
+    }
+
     public Produto atualizarProduto(Produto produto) {
         if (produto.getId() == null) {
             throw new IllegalArgumentException("ID do produto e obrigatorio para atualizacao.");

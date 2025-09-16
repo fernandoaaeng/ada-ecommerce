@@ -18,6 +18,12 @@ public class PedidoCLI {
         this.clienteService = new ClienteService();
         this.produtoService = new ProdutoService();
     }
+    
+    public PedidoCLI(PedidoService pedidoService) {
+        this.pedidoService = pedidoService;
+        this.clienteService = new ClienteService();
+        this.produtoService = new ProdutoService();
+    }
 
     public void executar() {
         while (true) {
@@ -27,8 +33,7 @@ public class PedidoCLI {
             String[] opcoes = {
                 "Criar Pedido",
                 "Listar Pedidos",
-                "Buscar Pedido por ID",
-                "Buscar Pedidos por Cliente",
+                "Buscar Pedidos",
                 "Gerenciar Itens do Pedido",
                 "Finalizar Pedido",
                 "Realizar Pagamento",
@@ -41,12 +46,11 @@ public class PedidoCLI {
             switch (opcao) {
                 case 1 -> criarPedido();
                 case 2 -> listarPedidos();
-                case 3 -> buscarPedidoPorId();
-                case 4 -> buscarPedidosPorCliente();
-                case 5 -> gerenciarItensPedido();
-                case 6 -> finalizarPedido();
-                case 7 -> realizarPagamento();
-                case 8 -> realizarEntrega();
+                case 3 -> menuBuscaPedidos();
+                case 4 -> gerenciarItensPedido();
+                case 5 -> finalizarPedido();
+                case 6 -> realizarPagamento();
+                case 7 -> realizarEntrega();
                 case 0 -> { return; }
             }
         }
@@ -207,6 +211,31 @@ public class PedidoCLI {
         ConsoleUtils.pausar("\nPressione Enter para continuar...");
     }
 
+    private void menuBuscaPedidos() {
+        while (true) {
+            ConsoleUtils.limparConsole();
+            ConsoleUtils.exibirCabecalho("Buscar Pedidos");
+
+            String[] opcoes = {
+                "Buscar por ID",
+                "Buscar por Cliente",
+                "Buscar por Status",
+                "Buscar por Valor"
+            };
+
+            ConsoleUtils.exibirMenu(opcoes);
+            int opcao = ConsoleUtils.lerOpcao(opcoes.length);
+
+            switch (opcao) {
+                case 1 -> buscarPedidoPorId();
+                case 2 -> buscarPedidosPorCliente();
+                case 3 -> buscarPedidosPorStatus();
+                case 4 -> buscarPedidosPorValor();
+                case 0 -> { return; }
+            }
+        }
+    }
+
     private void buscarPedidoPorId() {
         ConsoleUtils.limparConsole();
         ConsoleUtils.exibirCabecalho("Buscar Pedido por ID");
@@ -288,6 +317,188 @@ public class PedidoCLI {
                 System.out.println("Data Criacao: " + pedido.getDataCriacao());
                 System.out.println("-".repeat(40));
             }
+        }
+
+        ConsoleUtils.pausar("\nPressione Enter para continuar...");
+    }
+
+    private void buscarPedidosPorStatus() {
+        ConsoleUtils.limparConsole();
+        ConsoleUtils.exibirCabecalho("Buscar Pedidos por Status");
+
+        System.out.println("Status disponiveis:");
+        StatusPedido[] statusList = StatusPedido.values();
+        for (int i = 0; i < statusList.length; i++) {
+            System.out.println((i + 1) + " - " + statusList[i].getDescricao());
+        }
+
+        Integer opcaoStatus = ConsoleUtils.lerInt("\nEscolha o status: ");
+        if (opcaoStatus == null || opcaoStatus < 1 || opcaoStatus > statusList.length) {
+            System.out.println("ERRO: Opcao invalida.");
+            ConsoleUtils.pausar("\nPressione Enter para continuar...");
+            return;
+        }
+
+        StatusPedido status = statusList[opcaoStatus - 1];
+        List<Pedido> pedidos = pedidoService.buscarPedidosPorStatus(status);
+
+        if (pedidos.isEmpty()) {
+            System.out.println("Nenhum pedido encontrado com status: " + status.getDescricao());
+        } else {
+            System.out.println("Pedidos encontrados (" + pedidos.size() + "):\n");
+            for (Pedido pedido : pedidos) {
+                System.out.println("ID: " + pedido.getId());
+                System.out.println("Cliente ID: " + pedido.getClienteId());
+                System.out.println("Status: " + pedido.getStatus().getDescricao());
+                System.out.println("Valor Total: R$ " + String.format("%.2f", pedido.getValorTotal()));
+                System.out.println("Data Criacao: " + pedido.getDataCriacao());
+                if (pedido.getDataFinalizacao() != null) {
+                    System.out.println("Data Finalizacao: " + pedido.getDataFinalizacao());
+                }
+                System.out.println("-".repeat(40));
+            }
+        }
+
+        ConsoleUtils.pausar("\nPressione Enter para continuar...");
+    }
+
+    private void buscarPedidosPorValor() {
+        ConsoleUtils.limparConsole();
+        ConsoleUtils.exibirCabecalho("Buscar Pedidos por Valor");
+
+        String[] opcoes = {
+            "Pedidos com valor maior que",
+            "Pedidos com valor menor que",
+            "Pedidos com valor entre"
+        };
+
+        ConsoleUtils.exibirMenu(opcoes);
+        int opcao = ConsoleUtils.lerOpcao(opcoes.length);
+
+        switch (opcao) {
+            case 1 -> buscarPedidosPorValorMaiorQue();
+            case 2 -> buscarPedidosPorValorMenorQue();
+            case 3 -> buscarPedidosPorValorEntre();
+            case 0 -> { return; }
+        }
+    }
+
+    private void buscarPedidosPorValorMaiorQue() {
+        ConsoleUtils.limparConsole();
+        ConsoleUtils.exibirCabecalho("Buscar Pedidos com Valor Maior Que");
+
+        String valorStr = ConsoleUtils.lerString("Digite o valor minimo: ");
+        if (valorStr.isEmpty()) {
+            System.out.println("ERRO: Valor e obrigatorio.");
+            ConsoleUtils.pausar("\nPressione Enter para continuar...");
+            return;
+        }
+
+        try {
+            BigDecimal valor = new BigDecimal(valorStr.replace(",", "."));
+            List<Pedido> pedidos = pedidoService.buscarPedidosPorValorTotalMaiorQue(valor);
+
+            if (pedidos.isEmpty()) {
+                System.out.println("Nenhum pedido encontrado com valor maior que R$ " + String.format("%.2f", valor));
+            } else {
+                System.out.println("Pedidos encontrados (" + pedidos.size() + "):\n");
+                for (Pedido pedido : pedidos) {
+                    System.out.println("ID: " + pedido.getId());
+                    System.out.println("Cliente ID: " + pedido.getClienteId());
+                    System.out.println("Status: " + pedido.getStatus().getDescricao());
+                    System.out.println("Valor Total: R$ " + String.format("%.2f", pedido.getValorTotal()));
+                    System.out.println("Data Criacao: " + pedido.getDataCriacao());
+                    System.out.println("-".repeat(40));
+                }
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("ERRO: Valor invalido.");
+        }
+
+        ConsoleUtils.pausar("\nPressione Enter para continuar...");
+    }
+
+    private void buscarPedidosPorValorMenorQue() {
+        ConsoleUtils.limparConsole();
+        ConsoleUtils.exibirCabecalho("Buscar Pedidos com Valor Menor Que");
+
+        String valorStr = ConsoleUtils.lerString("Digite o valor maximo: ");
+        if (valorStr.isEmpty()) {
+            System.out.println("ERRO: Valor e obrigatorio.");
+            ConsoleUtils.pausar("\nPressione Enter para continuar...");
+            return;
+        }
+
+        try {
+            BigDecimal valor = new BigDecimal(valorStr.replace(",", "."));
+            List<Pedido> pedidos = pedidoService.buscarPedidosPorValorTotalMenorQue(valor);
+
+            if (pedidos.isEmpty()) {
+                System.out.println("Nenhum pedido encontrado com valor menor que R$ " + String.format("%.2f", valor));
+            } else {
+                System.out.println("Pedidos encontrados (" + pedidos.size() + "):\n");
+                for (Pedido pedido : pedidos) {
+                    System.out.println("ID: " + pedido.getId());
+                    System.out.println("Cliente ID: " + pedido.getClienteId());
+                    System.out.println("Status: " + pedido.getStatus().getDescricao());
+                    System.out.println("Valor Total: R$ " + String.format("%.2f", pedido.getValorTotal()));
+                    System.out.println("Data Criacao: " + pedido.getDataCriacao());
+                    System.out.println("-".repeat(40));
+                }
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("ERRO: Valor invalido.");
+        }
+
+        ConsoleUtils.pausar("\nPressione Enter para continuar...");
+    }
+
+    private void buscarPedidosPorValorEntre() {
+        ConsoleUtils.limparConsole();
+        ConsoleUtils.exibirCabecalho("Buscar Pedidos com Valor Entre");
+
+        String valorMinStr = ConsoleUtils.lerString("Digite o valor minimo: ");
+        if (valorMinStr.isEmpty()) {
+            System.out.println("ERRO: Valor minimo e obrigatorio.");
+            ConsoleUtils.pausar("\nPressione Enter para continuar...");
+            return;
+        }
+
+        String valorMaxStr = ConsoleUtils.lerString("Digite o valor maximo: ");
+        if (valorMaxStr.isEmpty()) {
+            System.out.println("ERRO: Valor maximo e obrigatorio.");
+            ConsoleUtils.pausar("\nPressione Enter para continuar...");
+            return;
+        }
+
+        try {
+            BigDecimal valorMinimo = new BigDecimal(valorMinStr.replace(",", "."));
+            BigDecimal valorMaximo = new BigDecimal(valorMaxStr.replace(",", "."));
+            
+            if (valorMinimo.compareTo(valorMaximo) > 0) {
+                System.out.println("ERRO: Valor minimo deve ser menor que valor maximo.");
+                ConsoleUtils.pausar("\nPressione Enter para continuar...");
+                return;
+            }
+
+            List<Pedido> pedidos = pedidoService.buscarPedidosPorValorTotalEntre(valorMinimo, valorMaximo);
+
+            if (pedidos.isEmpty()) {
+                System.out.println("Nenhum pedido encontrado com valor entre R$ " + 
+                                 String.format("%.2f", valorMinimo) + " e R$ " + String.format("%.2f", valorMaximo));
+            } else {
+                System.out.println("Pedidos encontrados (" + pedidos.size() + "):\n");
+                for (Pedido pedido : pedidos) {
+                    System.out.println("ID: " + pedido.getId());
+                    System.out.println("Cliente ID: " + pedido.getClienteId());
+                    System.out.println("Status: " + pedido.getStatus().getDescricao());
+                    System.out.println("Valor Total: R$ " + String.format("%.2f", pedido.getValorTotal()));
+                    System.out.println("Data Criacao: " + pedido.getDataCriacao());
+                    System.out.println("-".repeat(40));
+                }
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("ERRO: Valor invalido.");
         }
 
         ConsoleUtils.pausar("\nPressione Enter para continuar...");

@@ -21,7 +21,7 @@ public class ProdutoCLI {
             String[] opcoes = {
                 "Cadastrar Produto",
                 "Listar Produtos",
-                "Buscar Produto por ID",
+                "Buscar Produtos",
                 "Atualizar Produto"
             };
 
@@ -31,7 +31,7 @@ public class ProdutoCLI {
             switch (opcao) {
                 case 1 -> cadastrarProduto();
                 case 2 -> listarProdutos();
-                case 3 -> buscarProdutoPorId();
+                case 3 -> menuBuscaProdutos();
                 case 4 -> atualizarProduto();
                 case 0 -> { return; }
             }
@@ -85,6 +85,29 @@ public class ProdutoCLI {
         ConsoleUtils.pausar("\nPressione Enter para continuar...");
     }
 
+    private void menuBuscaProdutos() {
+        while (true) {
+            ConsoleUtils.limparConsole();
+            ConsoleUtils.exibirCabecalho("Buscar Produtos");
+
+            String[] opcoes = {
+                "Buscar por ID",
+                "Buscar por Nome",
+                "Buscar por Descricao"
+            };
+
+            ConsoleUtils.exibirMenu(opcoes);
+            int opcao = ConsoleUtils.lerOpcao(opcoes.length);
+
+            switch (opcao) {
+                case 1 -> buscarProdutoPorId();
+                case 2 -> buscarProdutosPorNome();
+                case 3 -> buscarProdutosPorDescricao();
+                case 0 -> { return; }
+            }
+        }
+    }
+
     private void buscarProdutoPorId() {
         ConsoleUtils.limparConsole();
         ConsoleUtils.exibirCabecalho("Buscar Produto por ID");
@@ -107,6 +130,66 @@ public class ProdutoCLI {
             System.out.println("Data Cadastro: " + produto.get().getDataCadastro());
         } else {
             System.out.println("\nERRO: Produto nao encontrado.");
+        }
+
+        ConsoleUtils.pausar("\nPressione Enter para continuar...");
+    }
+
+    private void buscarProdutosPorNome() {
+        ConsoleUtils.limparConsole();
+        ConsoleUtils.exibirCabecalho("Buscar Produtos por Nome");
+
+        String nome = ConsoleUtils.lerString("Digite o nome (ou parte do nome) do produto: ");
+        if (nome.isEmpty()) {
+            System.out.println("ERRO: Nome e obrigatorio.");
+            ConsoleUtils.pausar("\nPressione Enter para continuar...");
+            return;
+        }
+
+        List<Produto> produtos = produtoService.buscarProdutosPorNome(nome);
+
+        if (produtos.isEmpty()) {
+            System.out.println("Nenhum produto encontrado com o nome: " + nome);
+        } else {
+            System.out.println("Produtos encontrados (" + produtos.size() + "):\n");
+            for (Produto produto : produtos) {
+                System.out.println("ID: " + produto.getId());
+                System.out.println("Nome: " + produto.getNome());
+                System.out.println("Descricao: " + produto.getDescricao());
+                System.out.println("Valor Padrao: R$ " + String.format("%.2f", produto.getValorPadrao()));
+                System.out.println("Data Cadastro: " + produto.getDataCadastro());
+                System.out.println("-".repeat(40));
+            }
+        }
+
+        ConsoleUtils.pausar("\nPressione Enter para continuar...");
+    }
+
+    private void buscarProdutosPorDescricao() {
+        ConsoleUtils.limparConsole();
+        ConsoleUtils.exibirCabecalho("Buscar Produtos por Descricao");
+
+        String descricao = ConsoleUtils.lerString("Digite a descricao (ou parte da descricao) do produto: ");
+        if (descricao.isEmpty()) {
+            System.out.println("ERRO: Descricao e obrigatoria.");
+            ConsoleUtils.pausar("\nPressione Enter para continuar...");
+            return;
+        }
+
+        List<Produto> produtos = produtoService.buscarProdutosPorDescricao(descricao);
+
+        if (produtos.isEmpty()) {
+            System.out.println("Nenhum produto encontrado com a descricao: " + descricao);
+        } else {
+            System.out.println("Produtos encontrados (" + produtos.size() + "):\n");
+            for (Produto produto : produtos) {
+                System.out.println("ID: " + produto.getId());
+                System.out.println("Nome: " + produto.getNome());
+                System.out.println("Descricao: " + produto.getDescricao());
+                System.out.println("Valor Padrao: R$ " + String.format("%.2f", produto.getValorPadrao()));
+                System.out.println("Data Cadastro: " + produto.getDataCadastro());
+                System.out.println("-".repeat(40));
+            }
         }
 
         ConsoleUtils.pausar("\nPressione Enter para continuar...");
