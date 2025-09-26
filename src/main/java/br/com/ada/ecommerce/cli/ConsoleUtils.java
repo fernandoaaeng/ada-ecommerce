@@ -1,10 +1,11 @@
 package br.com.ada.ecommerce.cli;
 
+import java.util.List;
+import java.util.Scanner;
+
 import br.com.ada.ecommerce.models.Cliente;
 import br.com.ada.ecommerce.models.Pedido;
 import br.com.ada.ecommerce.models.Produto;
-import java.util.List;
-import java.util.Scanner;
 
 public class ConsoleUtils {
     private static Scanner scanner = new Scanner(System.in);
@@ -60,6 +61,11 @@ public class ConsoleUtils {
 
     public static void pausar(String mensagem) {
         System.out.println("\n" + mensagem);
+        scanner.nextLine();
+    }
+    
+    public static void pausar() {
+        System.out.println("\nPressione Enter para continuar...");
         scanner.nextLine();
     }
 

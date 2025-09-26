@@ -7,6 +7,7 @@ import br.com.ada.ecommerce.services.ProdutoService;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public class PedidoCLI {
     private final PedidoService pedidoService;

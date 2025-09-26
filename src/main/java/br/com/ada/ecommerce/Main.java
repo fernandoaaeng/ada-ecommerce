@@ -16,12 +16,18 @@ public class Main {
             e.printStackTrace();
         } finally {
             ConsoleUtils.fecharScanner();
+            // Fechar executors de threads
+            if (pedidoService != null) {
+                pedidoService.shutdown();
+            }
         }
     }
 
+    private static PedidoService pedidoService; // Declarar como varia?vel de classe
+    
     private static void executarSistema() {
-        // Criar instâncias únicas dos services
-        PedidoService pedidoService = new PedidoService();
+        // Criar insta?ncias a?nicas dos services
+        pedidoService = new PedidoService();
         
         ClienteCLI clienteCLI = new ClienteCLI();
         ProdutoCLI produtoCLI = new ProdutoCLI();
@@ -35,6 +41,7 @@ public class Main {
             System.out.println("Bem-vindo ao Sistema de E-Commerce da Ada Tech!");
             System.out.println("Gerencie clientes, produtos e pedidos de forma eficiente.");
             System.out.println("Todos os dados sao persistidos em arquivos CSV.");
+            System.out.println("a?? SISTEMA OTIMIZADO: Threads integradas para melhor performance!");
 
             String[] opcoes = {
                 "Realizar Venda (Fluxo Simplificado)",
